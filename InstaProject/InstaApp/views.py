@@ -1,10 +1,12 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-
-from .models import Post
+from .models import Posts
 from .forms import PostForm,RegisterForm,LoginForm
+from django.conf import settings
+
+from django.core.mail import send_mail
+
 from django.contrib.auth import(
     authenticate,
     login,
@@ -14,29 +16,38 @@ from django.contrib.auth import(
 def home(request):
     return render(request,'InstaApp/base.html')
 
-def postList(request):
-    posts=Post.objects.all()
+def post_list(request):
+    posts=Posts.objects.all()
     return render(request,'InstaApp/postlist.html',{'posts':posts})
 
 @login_required
-def viewPost(request,post_id):
-    post=get_object_or_404(Post,id=post_id)
+def view_post(request,post_id):
+    post=get_object_or_404(Posts,id=post_id)
     return render(request,'InstaApp/viewpost.html',{'post':post})
 
 @login_required()
-def createPost(request):
-    if request.method=="POST":
+def create_post(request):
+    form=PostForm()
+    if request.method=='POST':
         form=PostForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('InstaApp/postlist.html')
-    else:
-        form=PostForm()
+            post=form.save(commit=False)
+            post.user=request.user
+            post.save()
+            email_to=[request.user.username]
+            subject="Created new post!"
+            message=f"Posted successfully.\nPost image or video:{post.postmedia}\nCaption:{post.caption}\nLocation:{post.postlocation}"
+
+            send_mail(subject,message,settings.DEFAULT_FROM_EMAIL,email_to)
+            return redirect('postlist')
+
+        else:
+            form=PostForm()
     return render(request,'InstaApp/postcreate.html',{'form':form})
 
 @login_required
-def updatePost(request,post_id):
-    post=get_object_or_404(Post,id=post_id)
+def update_post(request,post_id):
+    post=get_object_or_404(Posts,id=post_id)
     if request.method=='POST':
         form=PostForm(request.POST,instance=post)
         if form.is_valid():
@@ -47,8 +58,8 @@ def updatePost(request,post_id):
     return render(request,'InstaApp/postupdate.html',{'form':form})
 
 @login_required
-def deletePost(request,post_id):
-    post=get_object_or_404(Post,id=post_id)
+def delete_post(request,post_id):
+    post=get_object_or_404(Posts,id=post_id)
     post.delete()
     return redirect('home')
 

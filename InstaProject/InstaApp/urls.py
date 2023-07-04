@@ -19,13 +19,13 @@ from . import views
 
 urlpatterns = [
     path('',views.home,name='home'),
-    path('postlist/',views.postList,name='postlist'),
-    path('postcreate/',views.createPost,name='postcreate'),
-    path('postdelete/<int:post_id>/',views.deletePost,name='postdelete'),
-    path('postupdate/<int:post_id>/',views.updatePost,name='postupdate'),
+    path('postlist/',views.post_list,name='postlist'),
+    path('postcreate/',views.create_post,name='postcreate'),
+    path('postdelete/<int:post_id>/',views.delete_post,name='postdelete'),
+    path('postupdate/<int:post_id>/',views.update_post,name='postupdate'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('signup/',views.register_view,name='signup'),
-    path('viewpost/<int:post_id>/',views.viewPost,name='viewpost')
+    path('viewpost/<int:post_id>/',views.view_post,name='viewpost')
 
 ]

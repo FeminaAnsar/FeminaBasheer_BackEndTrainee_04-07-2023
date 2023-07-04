@@ -12,8 +12,8 @@
           <img src="{{ post.postmedia.url }}" alt="Post Image" width="500px">
         </div>
         <div class="text-center mt-2">
-          <a href="{% url 'updatePost'  post.id %}" class="btn btn-sm btn-primary">Update</a>
-          <a href="{%  url 'deletePost' post.id %}" class="btn btn-sm btn-danger">Delete</a>
+          <a href="{% url 'postupdate'  post.id %}" class="btn btn-sm btn-primary">Update</a>
+          <a href="{%  url 'postdelete' post.id %}" class="btn btn-sm btn-danger">Delete</a>
         </div>
       </div>
     </div>

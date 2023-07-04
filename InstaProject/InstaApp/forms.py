@@ -5,7 +5,7 @@ from django .contrib.auth import(
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from .models import Post,Users
+from .models import Posts
 
 User= get_user_model()
 class LoginForm(forms.Form):
@@ -27,14 +27,14 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.ModelForm):
 
     class Meta:
-        model = Users
-        fields = ['username','first_name','last_name','email','password','phone','profile_picture']
+        model = User
+        fields = ['username','first_name','last_name','email','password']
 
 
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = Posts
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
